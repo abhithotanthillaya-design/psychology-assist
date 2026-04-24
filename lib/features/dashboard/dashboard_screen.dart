@@ -11,7 +11,6 @@ import '../../core/widgets/gradient_background.dart';
 import '../../core/widgets/smooth_widgets.dart';
 import '../../core/widgets/animations.dart';
 import '../../core/widgets/wavy_surface.dart';
-import 'stats_screen.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -55,19 +54,25 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
 
     final relatedPrescriptions = session.prescriptions.where((item) {
       if (profile?.role == UserRole.psychologist) {
-        return item.doctorEmail == profile?.email;
+        return item.prescribedByEmail == profile?.email;
       }
       return profile?.email != null &&
-          item.patientEmail.toLowerCase() == profile!.email!.toLowerCase();
+          item.patientEmail?.toLowerCase() == profile!.email!.toLowerCase();
     }).toList()
       ..sort((a, b) {
-        return a.hour.compareTo(b.hour) != 0
-            ? a.hour.compareTo(b.hour)
-            : a.minute.compareTo(b.minute);
+        return a.reminderTimes.isNotEmpty && b.reminderTimes.isNotEmpty
+            ? a.reminderTimes.first.hour
+                        .compareTo(b.reminderTimes.first.hour) !=
+                    0
+                ? a.reminderTimes.first.hour
+                    .compareTo(b.reminderTimes.first.hour)
+                : a.reminderTimes.first.minute
+                    .compareTo(b.reminderTimes.first.minute)
+            : 0;
       });
     final nextPrescription = relatedPrescriptions.isEmpty
         ? 'No reminders set'
-        : '${relatedPrescriptions.first.medicationName} at ${relatedPrescriptions.first.hour.toString().padLeft(2, '0')}:${relatedPrescriptions.first.minute.toString().padLeft(2, '0')}';
+        : '${relatedPrescriptions.first.medicines.join(', ')} at ${relatedPrescriptions.first.reminderTimes.isNotEmpty ? relatedPrescriptions.first.reminderTimes.first.toDisplayString() : 'No time'}';
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -314,6 +319,59 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                 ),
                 const SizedBox(height: 16),
 
+                // Journal Notes Card
+                if (session.journalSummary.isNotEmpty)
+                  SmoothCard(
+                    backgroundColor:
+                        theme.colorScheme.surface.withOpacity(0.72),
+                    borderColor: AppColors.neonViolet.withOpacity(0.24),
+                    borderRadius: 22,
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.book_outlined,
+                              color: theme.colorScheme.primary,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Journal Notes',
+                              style: AppTypography.headingSmall.copyWith(
+                                  color: theme.textTheme.titleMedium?.color),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          session.journalSummary,
+                          style: AppTypography.bodyMedium.copyWith(
+                            color: theme.textTheme.bodyMedium?.color,
+                          ),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 12),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () => _showAiChat(context),
+                            child: Text(
+                              'Update Notes',
+                              style: TextStyle(
+                                color: theme.colorScheme.primary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                if (session.journalSummary.isNotEmpty)
+                  const SizedBox(height: 16),
+
                 // Main CTA Button
                 SizedBox(
                   width: double.infinity,
@@ -342,7 +400,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: SmoothButton(
+                        onPressed: () {
+                          ref.read(selectedTabProvider.notifier).state = 2; // Journal tab
+                        },
+                        label: 'Journal',
+                        backgroundColor: AppColors.neonViolet,
+                        textColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: SmoothButton(
                         onPressed: () => _showAiChat(context),

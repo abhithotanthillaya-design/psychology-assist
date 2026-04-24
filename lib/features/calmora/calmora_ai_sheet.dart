@@ -16,7 +16,7 @@ class CalmoraAiSheet extends ConsumerStatefulWidget {
 
 class _CalmoraAiSheetState extends ConsumerState<CalmoraAiSheet> {
   final _controller = TextEditingController();
-  final _endpoint = Uri.parse('http://10.0.2.2:11434/api/generate');
+  final _endpoint = Uri.parse('http://localhost:11434/api/generate');
   String _reply =
       'Ask for a grounding exercise, journaling prompt, or appointment prep.';
   bool _loading = false;

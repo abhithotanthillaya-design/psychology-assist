@@ -532,7 +532,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   Future<void> _scheduleMedicationReminders() async {
     final prescriptions = ref.read(appSessionProvider).prescriptions;
     if (prescriptions.isNotEmpty) {
-      await NotificationService().scheduleMedicationReminders(prescriptions);
+      final medicines =
+          prescriptions.expand((p) => p.medicines).toSet().toList();
+      final times = prescriptions
+          .expand((p) =>
+              p.reminderTimes.map((t) => (hour: t.hour, minute: t.minute)))
+          .toSet()
+          .toList();
+      await NotificationService().scheduleMedicationReminders(
+        medicines: medicines,
+        times: times,
+      );
     }
   }
 

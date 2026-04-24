@@ -4,6 +4,7 @@ import '../../core/theme/app_colors.dart';
 import '../../features/calmora/calmora_ai_sheet.dart';
 import '../../features/dashboard/dashboard_screen.dart';
 import '../../features/mood_log/mood_log_screen.dart';
+import '../../features/journaling/journaling_screen.dart';
 import '../../features/appointments/appointments_screen.dart';
 import '../../features/psychologists/psychologists_screen.dart';
 import '../../features/settings/settings_screen.dart';
@@ -21,6 +22,7 @@ class HomeScreen extends ConsumerWidget {
     final pages = [
       const DashboardScreen(),
       const MoodLogScreen(),
+      const JournalingScreen(),
       const PsychologistsScreen(),
       const AppointmentsScreen(),
       const SettingsScreen(),
@@ -73,6 +75,11 @@ class HomeScreen extends ConsumerWidget {
               icon: Icon(Icons.add_circle_outline),
               activeIcon: Icon(Icons.add_circle),
               label: 'Log Mood',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.book_outlined),
+              activeIcon: Icon(Icons.book),
+              label: 'Journal',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.psychology_alt_outlined),

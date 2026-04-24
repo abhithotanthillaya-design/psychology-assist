@@ -418,6 +418,7 @@ class _PsychologistPracticeView extends ConsumerWidget {
               }
 
               final prescription = Prescription(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
                 patientName: patientName,
                 patientEmail: patientEmail,
                 prescribedByName: doctorName,
@@ -534,10 +535,10 @@ class _PrescriptionSection extends ConsumerWidget {
     final email = profile?.email?.toLowerCase() ?? '';
     final prescriptions = session.prescriptions.where((item) {
       if (isPsychologist) {
-        return item.doctorEmail.toLowerCase() == email;
+        return item.prescribedByEmail.toLowerCase() == email;
       }
       return profile?.email != null &&
-          item.patientEmail.toLowerCase() == profile!.email!.toLowerCase();
+          item.patientEmail?.toLowerCase() == profile!.email!.toLowerCase();
     }).toList();
     final theme = Theme.of(context);
 
@@ -712,6 +713,11 @@ class _PrescriptionSection extends ConsumerWidget {
                     onPressed: () {
                       final medication = medicationController.text.trim();
                       final patientEmail = patientEmailController.text.trim();
+                      final doctorName =
+                          ref.read(appSessionProvider).profile?.name ?? 'Dr.';
+                      final doctorEmail =
+                          ref.read(appSessionProvider).profile?.email ??
+                              demoPsychologistEmail;
                       if (medication.isEmpty || !patientEmail.contains('@')) {
                         AppSnackBar.showError(
                           context,
@@ -723,12 +729,18 @@ class _PrescriptionSection extends ConsumerWidget {
                       }
                       final prescription = Prescription(
                         id: DateTime.now().millisecondsSinceEpoch.toString(),
-                        medicationName: medication,
-                        doctorEmail: doctorEmail,
+                        patientName: 'Self',
                         patientEmail: patientEmail,
-                        instructions: instructionsController.text.trim(),
-                        hour: selectedTime.hour,
-                        minute: selectedTime.minute,
+                        prescribedByName: doctorName,
+                        prescribedByEmail: doctorEmail,
+                        medicines: [medication],
+                        reminderTimes: [
+                          MedicationTime(
+                              hour: selectedTime.hour,
+                              minute: selectedTime.minute)
+                        ],
+                        note: instructionsController.text.trim(),
+                        createdAt: DateTime.now(),
                       );
                       ref
                           .read(appSessionProvider.notifier)
@@ -738,7 +750,13 @@ class _PrescriptionSection extends ConsumerWidget {
                           .read(userPreferencesProvider)
                           .medicationRemindersEnabled) {
                         NotificationService().scheduleMedicationReminders(
-                          ref.read(appSessionProvider).prescriptions,
+                          medicines: [medication],
+                          times: [
+                            (
+                              hour: selectedTime.hour,
+                              minute: selectedTime.minute
+                            )
+                          ],
                         );
                       }
 
@@ -785,15 +803,15 @@ class _PrescriptionCard extends ConsumerWidget {
           backgroundColor: theme.colorScheme.primary,
           child: const Icon(Icons.medication, color: Colors.white),
         ),
-        title:
-            Text(prescription.medicationName, style: AppTypography.labelLarge),
+        title: Text(prescription.medicines.join(', '),
+            style: AppTypography.labelLarge),
         subtitle: Text(
-          '${prescription.patientEmail.isNotEmpty ? '${isPsychologist ? 'Patient' : 'From'}: ${prescription.patientEmail}\n' : ''}'
-          'Time: ${prescription.hour.toString().padLeft(2, '0')}:${prescription.minute.toString().padLeft(2, '0')}'
-          '${prescription.instructions.isNotEmpty ? '\n${prescription.instructions}' : ''}',
+          '${prescription.patientEmail?.isNotEmpty == true ? '${isPsychologist ? 'Patient' : 'From'}: ${prescription.patientEmail}\n' : ''}'
+          'Time: ${prescription.reminderTimes.isNotEmpty ? prescription.reminderTimes.first.toDisplayString() : 'No time set'}'
+          '${prescription.note.isNotEmpty ? '\n${prescription.note}' : ''}',
           style: AppTypography.bodySmall,
         ),
-        isThreeLine: prescription.instructions.isNotEmpty,
+        isThreeLine: prescription.note.isNotEmpty,
         trailing: isPsychologist
             ? IconButton(
                 icon: const Icon(Icons.delete_outline),
@@ -801,9 +819,23 @@ class _PrescriptionCard extends ConsumerWidget {
                   ref
                       .read(appSessionProvider.notifier)
                       .removePrescription(prescription.id);
-                  NotificationService().scheduleMedicationReminders(
-                    ref.read(appSessionProvider).prescriptions,
-                  );
+                  final prescriptions =
+                      ref.read(appSessionProvider).prescriptions;
+                  if (prescriptions.isNotEmpty) {
+                    final medicines = prescriptions
+                        .expand((p) => p.medicines)
+                        .toSet()
+                        .toList();
+                    final times = prescriptions
+                        .expand((p) => p.reminderTimes
+                            .map((t) => (hour: t.hour, minute: t.minute)))
+                        .toSet()
+                        .toList();
+                    NotificationService().scheduleMedicationReminders(
+                      medicines: medicines,
+                      times: times,
+                    );
+                  }
                 },
               )
             : null,
