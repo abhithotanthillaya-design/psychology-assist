@@ -31,8 +31,8 @@ class _CalmoraAiSheetState extends ConsumerState<CalmoraAiSheet> {
   }
 
   Future<String> _queryOllama(String prompt) async {
-    final ai = OllamaService(endpoint: _endpoint, model: _selectedModel);
-    return ai.summarize(prompt: prompt);
+    // Ollama is not currently available - return mock response
+    return _generateMockResponse(prompt);
   }
 
   Future<void> _send() async {

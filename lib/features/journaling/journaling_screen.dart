@@ -121,7 +121,8 @@ class _JournalingScreenState extends ConsumerState<JournalingScreen> {
                     hintText: 'Start writing your thoughts here...',
                     border: InputBorder.none,
                     hintStyle: AppTypography.bodyMedium.copyWith(
-                      color: theme.textTheme.bodyMedium?.color?.withOpacity(0.5),
+                      color:
+                          theme.textTheme.bodyMedium?.color?.withOpacity(0.5),
                     ),
                   ),
                   style: AppTypography.bodyMedium.copyWith(

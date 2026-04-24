@@ -403,18 +403,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                     const SizedBox(width: 8),
                     Expanded(
                       child: SmoothButton(
-                        onPressed: () {
-                          ref.read(selectedTabProvider.notifier).state = 2; // Journal tab
-                        },
-                        label: 'Journal',
-                        backgroundColor: AppColors.neonViolet,
-                        textColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: SmoothButton(
                         onPressed: () => _showAiChat(context),
                         label: 'AI Chat',
                         backgroundColor: AppColors.neonViolet,
