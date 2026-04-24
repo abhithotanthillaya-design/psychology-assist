@@ -15,7 +15,6 @@ class AppTheme {
   static const _pageTransitions = PageTransitionsTheme(
     builders: {
       TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
     },
   );
 
