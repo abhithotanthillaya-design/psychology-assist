@@ -40,12 +40,17 @@ class NotificationService {
 
   /// Request notification permissions
   Future<bool> requestPermissions() async {
-    final permissions = await _notificationsPlugin
+    final androidPermissions = await _notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
+
+    final iosPermissions = await _notificationsPlugin
         .resolvePlatformSpecificImplementation<
             IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(alert: true, badge: true, sound: true);
 
-    return permissions ?? false;
+    return androidPermissions ?? iosPermissions ?? false;
   }
 
   /// Show a simple notification
@@ -116,7 +121,7 @@ class NotificationService {
     try {
       await _notificationsPlugin.zonedSchedule(
         1000 + hour,
-        '🎯 How are you feeling?',
+        'Mood check-in',
         'Take a moment to log your mood and reflect on your wellness.',
         scheduledDate,
         details,
@@ -129,10 +134,24 @@ class NotificationService {
       // Fallback for older versions
       await _notificationsPlugin.show(
         1000 + hour,
-        '🎯 How are you feeling?',
+        'Mood check-in',
         'Take a moment to log your mood and reflect on your wellness.',
         details,
       );
+    }
+  }
+
+  Future<void> scheduleMoodCheckInsEvery(int hours) async {
+    final interval = hours.clamp(2, 12);
+    await cancelMoodCheckIns();
+    for (var hour = 9; hour <= 21; hour += interval) {
+      await scheduleMoodCheckIn(hour: hour, minute: 0);
+    }
+  }
+
+  Future<void> cancelMoodCheckIns() async {
+    for (var hour = 0; hour < 24; hour++) {
+      await _notificationsPlugin.cancel(1000 + hour);
     }
   }
 
@@ -177,7 +196,7 @@ class NotificationService {
     try {
       await _notificationsPlugin.zonedSchedule(
         2000 + hour,
-        '💊 Time for your medication',
+        'Medication reminder',
         'Remember to take $medicationName as prescribed.',
         scheduledDate,
         details,
@@ -190,7 +209,7 @@ class NotificationService {
       // Fallback for older versions
       await _notificationsPlugin.show(
         2000 + hour,
-        '💊 Time for your medication',
+        'Medication reminder',
         'Remember to take $medicationName as prescribed.',
         details,
       );
