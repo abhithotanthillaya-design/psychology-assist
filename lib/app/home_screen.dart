@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../../core/theme/app_colors.dart';
 import '../../core/services/ollama_service.dart';
 import '../../features/dashboard/dashboard_screen.dart';
@@ -115,19 +114,16 @@ class _CalmoraAiSheet extends StatefulWidget {
 
 class _CalmoraAiSheetState extends State<_CalmoraAiSheet> {
   final _controller = TextEditingController();
-  final _speech = stt.SpeechToText();
   final _ai = OllamaService(
     endpoint: Uri.parse('http://10.0.2.2:11434/api/generate'),
   );
   String _reply =
       'Ask for a grounding exercise, journaling prompt, or appointment prep.';
   bool _loading = false;
-  bool _listening = false;
 
   @override
   void dispose() {
     _controller.dispose();
-    _speech.stop();
     super.dispose();
   }
 
@@ -153,25 +149,6 @@ class _CalmoraAiSheetState extends State<_CalmoraAiSheet> {
         setState(() => _loading = false);
       }
     }
-  }
-
-  Future<void> _toggleVoice() async {
-    if (_listening) {
-      await _speech.stop();
-      setState(() => _listening = false);
-      return;
-    }
-    final available = await _speech.initialize();
-    if (!available) {
-      setState(() => _reply = 'Speech recognition permission is not available.');
-      return;
-    }
-    setState(() => _listening = true);
-    await _speech.listen(
-      onResult: (result) {
-        setState(() => _controller.text = result.recognizedWords);
-      },
-    );
   }
 
   @override
@@ -225,21 +202,11 @@ class _CalmoraAiSheetState extends State<_CalmoraAiSheet> {
             minLines: 1,
             maxLines: 4,
             decoration: InputDecoration(
-              hintText: 'Type or dictate what is on your mind',
-              suffixIcon: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    tooltip: 'Voice to text',
-                    onPressed: _toggleVoice,
-                    icon: Icon(_listening ? Icons.mic : Icons.mic_none),
-                  ),
-                  IconButton(
-                    tooltip: 'Send',
-                    onPressed: _send,
-                    icon: const Icon(Icons.send_rounded),
-                  ),
-                ],
+              hintText: 'Type what is on your mind',
+              suffixIcon: IconButton(
+                tooltip: 'Send',
+                onPressed: _send,
+                icon: const Icon(Icons.send_rounded),
               ),
             ),
             onSubmitted: (_) => _send(),
