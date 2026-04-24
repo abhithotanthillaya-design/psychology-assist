@@ -8,6 +8,9 @@ export 'theme/app_theme.dart';
 // Widgets
 export 'widgets/smooth_widgets.dart';
 export 'widgets/animations.dart';
+export 'widgets/gradient_background.dart';
 
 // Services
 export 'services/notification_service.dart';
+export 'services/app_session_store.dart';
+export 'services/ollama_service.dart';
