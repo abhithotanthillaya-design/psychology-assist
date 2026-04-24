@@ -94,16 +94,16 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                   height: 150 * _breathAnimation.value,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.neonCyan.withOpacity(0.3),
+                    color: const Color(0xFFB7C97B).withOpacity(0.3),
                     border: Border.all(
-                      color: AppColors.neonCyan,
+                      color: const Color(0xFFB7C97B),
                       width: 3,
                     ),
                   ),
                   child: const Icon(
                     Icons.air,
                     size: 50,
-                    color: AppColors.neonCyan,
+                    color: const Color(0xFFB7C97B),
                   ),
                 );
               },

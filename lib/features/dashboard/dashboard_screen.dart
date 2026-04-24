@@ -101,7 +101,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
         ),
         title: Text('Hey ${profile?.name ?? 'Ahmed'}'),
       ),
-      body: GradientBackground(
+      body: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: SingleChildScrollView(
           padding: const EdgeInsets.only(top: 92),
           child: Padding(
@@ -110,71 +111,32 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 80),
               children: [
-                WavySurface(
-                  borderRadius: BorderRadius.circular(28),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      theme.colorScheme.primary,
-                      theme.colorScheme.tertiary,
-                    ],
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.black, width: 1.2),
                   ),
-                  borderColor:
-                      theme.colorScheme.primary.withValues(alpha: 0.28),
-                  waveColorA: Colors.white.withValues(alpha: 0.16),
-                  waveColorB:
-                      theme.colorScheme.secondary.withValues(alpha: 0.18),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(22),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 52,
-                              height: 52,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.18),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.auto_awesome,
-                                color: theme.colorScheme.onPrimary,
-                              ),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Hi ${profile?.name ?? 'there'}',
-                                    style: AppTypography.headingLarge.copyWith(
-                                      color: theme.colorScheme.onPrimary,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    'Your private, glowing little care space is ready.',
-                                    style: AppTypography.bodySmall.copyWith(
-                                      color: theme.colorScheme.onPrimary
-                                          .withValues(alpha: 0.84),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                      Text(
+                        'Hello ${profile?.name ?? 'there'}',
+                        style: const TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
+                      const SizedBox(height: 6),
+                      const Text('Writing for today...'),
                     ],
                   ),
                 ),
                 const SizedBox(height: 16),
                 SmoothCard(
                   backgroundColor: theme.colorScheme.surface.withOpacity(0.82),
-                  borderColor: AppColors.neonCyan.withOpacity(0.16),
+                  borderColor: const Color(0xFFB7C97B).withOpacity(0.16),
                   borderRadius: 22,
                   elevation: 12,
                   padding: const EdgeInsets.all(16),
@@ -223,13 +185,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.primary.withOpacity(0.1),
+                              color: Colors.black87.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               '${ref.watch(appSessionProvider).moodEntries.length} saved',
                               style: AppTypography.labelMedium.copyWith(
-                                color: theme.colorScheme.primary,
+                                color: Colors.black87,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -257,7 +219,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                               'Sat',
                               'Sun'
                             ][i],
-                            color: theme.colorScheme.primary,
+                            color: Colors.black87,
                           ),
                         ),
                       ),
@@ -269,7 +231,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                 // Quick Insights Card
                 SmoothCard(
                   backgroundColor: theme.colorScheme.surface.withOpacity(0.72),
-                  borderColor: AppColors.neonCyan.withOpacity(0.24),
+                  borderColor: const Color(0xFFB7C97B).withOpacity(0.24),
                   borderRadius: 22,
                   padding: const EdgeInsets.all(20),
                   child: Column(
@@ -328,7 +290,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                       ref.read(selectedTabProvider.notifier).state = 1;
                     },
                     label: '+ Log Mood',
-                    backgroundColor: theme.colorScheme.primary,
+                    backgroundColor: Colors.black87,
                     textColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
@@ -411,7 +373,7 @@ class _CalmoraAiSheet extends StatefulWidget {
 class _CalmoraAiSheetState extends State<_CalmoraAiSheet> {
   final _controller = TextEditingController();
   final _ai = OllamaService(
-    endpoint: Uri.parse('http://10.0.2.2:11434/api/generate'),
+    endpoint: Uri.parse('http://10.0.2.2:8000/chat'),
   );
   String _reply =
       'Ask for a grounding exercise, journaling prompt, or appointment prep.';
@@ -480,7 +442,7 @@ class _CalmoraAiSheetState extends State<_CalmoraAiSheet> {
         children: [
           Row(
             children: [
-              const Icon(Icons.auto_awesome, color: AppColors.neonCyan),
+              const Icon(Icons.auto_awesome, color: const Color(0xFFB7C97B)),
               const SizedBox(width: 10),
               Text(
                 'Calmora AI',
@@ -492,7 +454,7 @@ class _CalmoraAiSheetState extends State<_CalmoraAiSheet> {
               Text(
                 'Q4 local',
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.primary,
+                  color: Colors.black87,
                 ),
               ),
             ],
@@ -597,7 +559,7 @@ class _InsightRow extends StatelessWidget {
             Icon(
               icon,
               size: 18,
-              color: theme.colorScheme.primary,
+              color: Colors.black87,
             ),
             const SizedBox(width: 12),
             Column(
@@ -649,7 +611,7 @@ class _DashboardStat extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, color: theme.colorScheme.primary, size: 18),
+              Icon(icon, color: Colors.black87, size: 18),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(

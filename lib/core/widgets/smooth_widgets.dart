@@ -56,7 +56,7 @@ class SmoothCard extends StatelessWidget {
             boxShadow: elevation > 0
                 ? [
                     BoxShadow(
-                      color: theme.colorScheme.primary.withOpacity(0.12),
+                      color: Colors.black87.withOpacity(0.12),
                       blurRadius: elevation,
                       offset: Offset(0, elevation / 2),
                     ),
@@ -124,7 +124,7 @@ class _SmoothButtonState extends State<SmoothButton> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bgColor = widget.backgroundColor ?? theme.colorScheme.primary;
+    final bgColor = widget.backgroundColor ?? Colors.black87;
     final textColor =
         widget.textColor ?? (widget.isOutlined ? bgColor : Colors.white);
 

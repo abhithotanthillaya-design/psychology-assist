@@ -280,10 +280,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   if (preferences.moodCheckInsEnabled)
                     SmoothCard(
                       padding: const EdgeInsets.all(16),
-                      backgroundColor: theme.colorScheme.primary.withOpacity(
+                      backgroundColor: Colors.black87.withOpacity(
                         0.05,
                       ),
-                      borderColor: theme.colorScheme.primary.withOpacity(0.2),
+                      borderColor: Colors.black87.withOpacity(0.2),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -564,7 +564,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     ];
     final colors = [
       AppColors.neonViolet,
-      AppColors.neonCyan,
+      const Color(0xFFB7C97B),
       AppColors.success,
       AppColors.info,
     ];
@@ -799,11 +799,10 @@ class _ThemeButton extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
         decoration: BoxDecoration(
-          color: isSelected
-              ? theme.colorScheme.primary.withOpacity(0.1)
-              : Colors.transparent,
+          color:
+              isSelected ? Colors.black87.withOpacity(0.1) : Colors.transparent,
           border: Border.all(
-            color: isSelected ? theme.colorScheme.primary : theme.dividerColor,
+            color: isSelected ? Colors.black87 : theme.dividerColor,
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(12),
@@ -814,7 +813,7 @@ class _ThemeButton extends StatelessWidget {
             Icon(
               icon,
               color: isSelected
-                  ? theme.colorScheme.primary
+                  ? Colors.black87
                   : theme.textTheme.bodySmall?.color,
               size: 24,
             ),
@@ -823,7 +822,7 @@ class _ThemeButton extends StatelessWidget {
               title,
               style: AppTypography.labelSmall.copyWith(
                 color: isSelected
-                    ? theme.colorScheme.primary
+                    ? Colors.black87
                     : theme.textTheme.bodySmall?.color,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
               ),
@@ -870,7 +869,7 @@ class _SettingsToggle extends StatelessWidget {
                     icon,
                     size: 20,
                     color: enabled
-                        ? theme.colorScheme.primary
+                        ? Colors.black87
                         : theme.textTheme.bodySmall?.color?.withOpacity(0.5),
                   ),
                   const SizedBox(width: 12),
@@ -906,7 +905,7 @@ class _SettingsToggle extends StatelessWidget {
         Switch(
           value: enabled ? value : false,
           onChanged: enabled ? onChanged : null,
-          activeColor: theme.colorScheme.primary,
+          activeColor: Colors.black87,
         ),
       ],
     );

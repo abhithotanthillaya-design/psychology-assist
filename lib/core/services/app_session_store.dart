@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
 
@@ -24,24 +24,64 @@ class AppSessionStore {
   }
 
   Future<AppSession> load() async {
-    final db = await _open();
-    final rows = await db.query(
-      _tableName,
-      where: 'id = ?',
-      whereArgs: [_stateKey],
-      limit: 1,
-    );
-    if (rows.isEmpty) {
-      return const AppSession();
-    }
+  return AppSession(
+    onboardingComplete: true,
+    appLockSet: true,
 
-    final payload = rows.first['payload'] as String;
-    final data = jsonDecode(payload) as Map<String, dynamic>;
-    final session = _sessionFromJson(data);
-    return session.copyWith(
-      isLocked: session.onboardingComplete && session.appLockSet,
-    );
-  }
+    profile: AppProfile(
+      role: UserRole.patient,
+      name: 'Aster',
+      email: 'aster@calmora.dev',
+      psychologistEmail: demoPsychologistEmail,
+      avatarColorValue: 0xFF7C4DFF,
+      avatarIconCodePoint: Icons.psychology_alt.codePoint,
+    ),
+
+    moodEntries: [
+      MoodEntry(
+        createdAt: DateTime.now(),
+        value: 4,
+        label: 'Good',
+        note: 'Calm day',
+      ),
+      MoodEntry(
+        createdAt: DateTime.now().subtract(const Duration(days: 1)),
+        value: 2,
+        label: 'Low',
+        note: 'Bit off',
+      ),
+    ],
+
+    appointments: [
+      Appointment(
+        psychologistEmail: demoPsychologistEmail,
+        psychologistName: 'Dr. Aisha Mehta',
+        patientName: 'Aster',
+        patientEmail: 'aster@calmora.dev',
+        startsAt: DateTime.now().add(const Duration(hours: 3)),
+        type: 'Therapy',
+        note: 'First session',
+        confirmed: true,
+      ),
+    ],
+
+    prescriptions: [
+      Prescription(
+        id: 'rx1',
+        patientName: 'Aster',
+        patientEmail: 'aster@calmora.dev',
+        prescribedByName: 'Dr. Aisha Mehta',
+        prescribedByEmail: demoPsychologistEmail,
+        medicines: ['Sertraline'],
+        reminderTimes: [
+          const MedicationTime(hour: 9, minute: 0),
+        ],
+        note: 'After breakfast',
+        createdAt: DateTime.now(),
+      ),
+    ],
+  );
+}
 
   Future<void> save(AppSession session) async {
     final db = await _open();

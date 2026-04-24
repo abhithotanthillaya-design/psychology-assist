@@ -16,7 +16,7 @@ class CalmoraAiSheet extends ConsumerStatefulWidget {
 
 class _CalmoraAiSheetState extends ConsumerState<CalmoraAiSheet> {
   final _controller = TextEditingController();
-  final _endpoint = Uri.parse('http://localhost:11434/api/generate');
+  final _endpoint = Uri.parse('http://10.16.209.73:8000/chat');
   String _reply =
       'Ask for a grounding exercise, journaling prompt, or appointment prep.';
   bool _loading = false;
@@ -31,8 +31,9 @@ class _CalmoraAiSheetState extends ConsumerState<CalmoraAiSheet> {
   }
 
   Future<String> _queryOllama(String prompt) async {
-    // Ollama is not currently available - return mock response
-    return _generateMockResponse(prompt);
+    final ai = OllamaService(endpoint: _endpoint);
+
+    return await ai.summarize(prompt: prompt);
   }
 
   Future<void> _send() async {
@@ -56,7 +57,7 @@ class _CalmoraAiSheetState extends ConsumerState<CalmoraAiSheet> {
     } catch (_) {
       final mockResponse = _generateMockResponse(text);
       setState(() => _reply =
-          '$mockResponse\n\n(Quantized model is configured for $_selectedModel, but Ollama is not reachable. Start Ollama on port 11434 or update the endpoint.)');
+          '$mockResponse\n\n(Quantized model is configured for $_selectedModel, but Ollama is not reachable. Start Ollama on port 8000 or update the endpoint.)');
     } finally {
       if (mounted) {
         setState(() => _loading = false);
@@ -161,7 +162,7 @@ class _CalmoraAiSheetState extends ConsumerState<CalmoraAiSheet> {
         children: [
           Row(
             children: [
-              const Icon(Icons.auto_awesome, color: AppColors.neonCyan),
+              const Icon(Icons.auto_awesome, color: const Color(0xFFB7C97B)),
               const SizedBox(width: 10),
               Text(
                 _mode == CalmoraAiMode.chat ? 'Calmora AI' : 'Calmora Journal',
@@ -173,7 +174,7 @@ class _CalmoraAiSheetState extends ConsumerState<CalmoraAiSheet> {
               Text(
                 'Quantized',
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.primary,
+                  color: Colors.black87,
                 ),
               ),
             ],
@@ -254,7 +255,7 @@ class _CalmoraAiSheetState extends ConsumerState<CalmoraAiSheet> {
                       ? _summarizeJournal
                       : _send,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.colorScheme.primary,
+                    backgroundColor: Colors.black87,
                   ),
                   child: Text(
                     _mode == CalmoraAiMode.journal

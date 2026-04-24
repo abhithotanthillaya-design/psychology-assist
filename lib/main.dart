@@ -5,6 +5,7 @@ import 'app/app_state.dart';
 import 'core/services/app_session_store.dart';
 import 'core/services/notification_service.dart';
 import 'core/theme/app_theme.dart';
+import 'features/dashboard/dashboard_screen.dart'; // add this
 import 'app/navigation/app_router.dart';
 import 'features/app_lock/app_lock_gate.dart';
 import 'features/onboarding/onboarding_screen.dart';
@@ -45,6 +46,8 @@ class MyApp extends ConsumerWidget {
           return AppThemes.darkTheme;
         case AppThemeMode.medical:
           return AppThemes.medicalTheme;
+        case AppThemeMode.journal:
+          return AppThemes.journalTheme;
       }
     }
 
@@ -55,13 +58,11 @@ class MyApp extends ConsumerWidget {
       themeMode:
           themeMode == AppThemeMode.dark ? ThemeMode.dark : ThemeMode.light,
       home: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 550),
-        switchInCurve: Curves.easeOutCubic,
-        switchOutCurve: Curves.easeInCubic,
-        child: session.onboardingComplete && session.appLockSet
-            ? const AppLockGate(key: ValueKey('lockGate'))
-            : const OnboardingScreen(key: ValueKey('onboarding')),
-      ),
+  duration: const Duration(milliseconds: 500),
+  child: !session.onboardingComplete
+      ? const OnboardingScreen()
+      : const AppLockGate(),
+),
       onGenerateRoute: AppRouter.generateRoute,
       debugShowCheckedModeBanner: false,
     );

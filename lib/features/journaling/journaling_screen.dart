@@ -80,7 +80,7 @@ class _JournalingScreenState extends ConsumerState<JournalingScreen> {
                 : Text(
                     'Save',
                     style: TextStyle(
-                      color: theme.colorScheme.primary,
+                      color: Colors.black87,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -109,7 +109,7 @@ class _JournalingScreenState extends ConsumerState<JournalingScreen> {
             Expanded(
               child: SmoothCard(
                 backgroundColor: theme.colorScheme.surface.withOpacity(0.8),
-                borderColor: AppColors.neonCyan.withOpacity(0.2),
+                borderColor: const Color(0xFFB7C97B).withOpacity(0.2),
                 borderRadius: 16,
                 padding: const EdgeInsets.all(16),
                 child: TextField(

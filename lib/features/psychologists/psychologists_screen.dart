@@ -21,7 +21,8 @@ class PsychologistsScreen extends ConsumerWidget {
     final psychologists = _dynamicPsychologists(profile);
 
     return Scaffold(
-      body: GradientBackground(
+      body: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: SafeArea(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(18, 18, 18, 28),
@@ -117,10 +118,11 @@ class _PsychologistPracticeView extends ConsumerWidget {
           borderRadius: 18,
           backgroundColor:
               Theme.of(context).colorScheme.surface.withOpacity(0.72),
-          borderColor: AppColors.neonCyan.withOpacity(0.24),
+          borderColor: const Color(0xFFB7C97B).withOpacity(0.24),
           child: Row(
             children: [
-              const Icon(Icons.groups_2_outlined, color: AppColors.neonCyan),
+              const Icon(Icons.groups_2_outlined,
+                  color: const Color(0xFFB7C97B)),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
@@ -252,7 +254,7 @@ class _PsychologistPracticeView extends ConsumerWidget {
                         Text(
                           'Reminders: ${prescription.reminderTimes.map((t) => t.toDisplayString()).join(', ')}',
                           style: AppTypography.bodySmall.copyWith(
-                            color: AppColors.neonCyan,
+                            color: const Color(0xFFB7C97B),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -546,7 +548,7 @@ class _PrescriptionSection extends ConsumerWidget {
       padding: const EdgeInsets.all(18),
       borderRadius: 22,
       backgroundColor: theme.colorScheme.surface.withOpacity(0.78),
-      borderColor: theme.colorScheme.primary.withOpacity(0.18),
+      borderColor: Colors.black87.withOpacity(0.18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -575,7 +577,7 @@ class _PrescriptionSection extends ConsumerWidget {
                 children: [
                   Icon(
                     isPsychologist ? Icons.add_circle_outline : Icons.inbox,
-                    color: theme.colorScheme.primary,
+                    color: Colors.black87,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -795,12 +797,12 @@ class _PrescriptionCard extends ConsumerWidget {
     return SmoothCard(
       borderRadius: 18,
       backgroundColor: theme.colorScheme.surface.withOpacity(0.74),
-      borderColor: theme.colorScheme.primary.withOpacity(0.18),
+      borderColor: Colors.black87.withOpacity(0.18),
       child: ListTile(
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         leading: CircleAvatar(
-          backgroundColor: theme.colorScheme.primary,
+          backgroundColor: Colors.black87,
           child: const Icon(Icons.medication, color: Colors.white),
         ),
         title: Text(prescription.medicines.join(', '),

@@ -58,7 +58,7 @@ class HomeScreen extends ConsumerWidget {
           },
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.transparent,
-          selectedItemColor: theme.colorScheme.primary,
+          selectedItemColor: Colors.black87,
           unselectedItemColor: theme.textTheme.bodySmall?.color?.withOpacity(
             0.6,
           ),

@@ -168,7 +168,8 @@ class _AppointmentsScreenState extends ConsumerState<AppointmentsScreen> {
         .toList();
 
     return Scaffold(
-      body: GradientBackground(
+      body: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: SafeArea(
           child: CustomScrollView(
             slivers: [
@@ -450,7 +451,7 @@ class _AppointmentCard extends StatelessWidget {
     return SmoothCard(
       borderRadius: 20,
       backgroundColor: Theme.of(context).colorScheme.surface.withOpacity(0.72),
-      borderColor: AppColors.neonCyan.withOpacity(0.3),
+      borderColor: const Color(0xFFB7C97B).withOpacity(0.3),
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
@@ -459,7 +460,7 @@ class _AppointmentCard extends StatelessWidget {
             height: 56,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.neonCyan.withOpacity(0.16),
+              color: const Color(0xFFB7C97B).withOpacity(0.16),
             ),
             child: const Icon(Icons.video_call, color: AppColors.deepViolet),
           ),

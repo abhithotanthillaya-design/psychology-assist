@@ -97,7 +97,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: GradientBackground(
+      body: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
@@ -344,7 +345,7 @@ class _RoleCard extends StatelessWidget {
       borderRadius: 18,
       padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
       backgroundColor: selected ? AppColors.neonViolet : Colors.white,
-      borderColor: selected ? AppColors.neonCyan : AppColors.lightBorder,
+      borderColor: selected ? const Color(0xFFB7C97B) : AppColors.lightBorder,
       elevation: selected ? 18 : 0,
       child: Column(
         children: [

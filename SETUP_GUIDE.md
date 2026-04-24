@@ -191,7 +191,7 @@ SmoothCard(
 SmoothButton(
   label: 'Action',
   onPressed: () {},
-  backgroundColor: theme.colorScheme.primary,
+  backgroundColor: Colors.black87,
   isLoading: false,
   isOutlined: false,
 )

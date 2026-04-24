@@ -36,7 +36,8 @@ class _AppLockScreenState extends ConsumerState<AppLockScreen> {
   Widget build(BuildContext context) {
     final profile = ref.watch(appSessionProvider).profile;
     return Scaffold(
-      body: GradientBackground(
+      body: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(

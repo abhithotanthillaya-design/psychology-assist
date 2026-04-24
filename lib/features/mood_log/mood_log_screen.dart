@@ -177,7 +177,7 @@ class _MoodLogScreenState extends ConsumerState<MoodLogScreen>
                       Text(
                         'Feeling ${_moods[_selectedMoodIndex!].label.toLowerCase()}',
                         style: AppTypography.labelLarge.copyWith(
-                          color: theme.colorScheme.primary,
+                          color: Colors.black87,
                         ),
                       ),
                   ],
@@ -236,7 +236,7 @@ class _MoodLogScreenState extends ConsumerState<MoodLogScreen>
                 child: SmoothButton(
                   onPressed: _submitMood,
                   label: 'Save Mood Entry',
-                  backgroundColor: theme.colorScheme.primary,
+                  backgroundColor: Colors.black87,
                   textColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),

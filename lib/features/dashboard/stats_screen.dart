@@ -22,7 +22,8 @@ class StatsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Stats')),
-      body: GradientBackground(
+      body: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: ListView(
           padding: const EdgeInsets.all(18),
           children: [
@@ -50,7 +51,7 @@ class StatsScreen extends ConsumerWidget {
                       _StatTile(
                         label: 'Total entries',
                         value: '${entries.length}',
-                        color: AppColors.neonCyan,
+                        color: const Color(0xFFB7C97B),
                       ),
                       const SizedBox(width: 12),
                       _StatTile(

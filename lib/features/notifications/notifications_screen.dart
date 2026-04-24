@@ -14,7 +14,8 @@ class NotificationsScreen extends StatelessWidget {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: const Text('Alerts')),
-      body: GradientBackground(
+      body: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: ListView(
           padding: const EdgeInsets.all(18),
           children: [
@@ -24,11 +25,11 @@ class NotificationsScreen extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  theme.colorScheme.primary.withValues(alpha: 0.95),
+                  Colors.black87.withValues(alpha: 0.95),
                   theme.colorScheme.tertiary.withValues(alpha: 0.86),
                 ],
               ),
-              borderColor: theme.colorScheme.primary.withValues(alpha: 0.28),
+              borderColor: Colors.black87.withValues(alpha: 0.28),
               waveColorA: Colors.white.withValues(alpha: 0.16),
               waveColorB: theme.colorScheme.secondary.withValues(alpha: 0.18),
               child: Padding(
@@ -78,13 +79,14 @@ class NotificationsScreen extends StatelessWidget {
             const SizedBox(height: 16),
             SmoothCard(
               borderRadius: 22,
-              backgroundColor: theme.colorScheme.surface.withValues(alpha: 0.72),
-              borderColor: theme.colorScheme.primary.withValues(alpha: 0.24),
+              backgroundColor:
+                  theme.colorScheme.surface.withValues(alpha: 0.72),
+              borderColor: Colors.black87.withValues(alpha: 0.24),
               child: ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Icon(
                   Icons.notifications_active_outlined,
-                  color: theme.colorScheme.primary,
+                  color: Colors.black87,
                 ),
                 title: const Text('Test alert'),
                 subtitle: const Text('Send a Calmora notification now.'),
@@ -110,7 +112,8 @@ class NotificationsScreen extends StatelessWidget {
             const SizedBox(height: 12),
             SmoothCard(
               borderRadius: 22,
-              backgroundColor: theme.colorScheme.surface.withValues(alpha: 0.72),
+              backgroundColor:
+                  theme.colorScheme.surface.withValues(alpha: 0.72),
               child: ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Icon(

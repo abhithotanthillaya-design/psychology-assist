@@ -7,6 +7,7 @@ class AppThemes {
   static ThemeData get lightTheme => AppTheme.light();
   static ThemeData get darkTheme => AppTheme.dark();
   static ThemeData get medicalTheme => AppTheme.light();
+  static ThemeData get journalTheme => AppTheme.journal();
 }
 
 class AppTheme {
@@ -44,6 +45,66 @@ class AppTheme {
     onSurface: Color(0xFF1A2433),
     onError: Color(0xFFFFFFFF),
   );
+
+  static ThemeData journal() {
+    const paperBg = Color(0xFFF6F1E8);
+    const ink = Color(0xFF1E2A38);
+    const accent = Color(0xFFB7C97B); // soft green
+    const card = Color(0xFFFFFFFF);
+
+    final scheme = ColorScheme.light(
+      primary: ink,
+      secondary: accent,
+      tertiary: ink,
+      surface: card,
+      onPrimary: Colors.white,
+      onSecondary: ink,
+      onSurface: ink,
+    );
+
+    final textTheme = GoogleFonts.caveatTextTheme().copyWith(
+      bodyMedium: GoogleFonts.indieFlower(
+        fontSize: 16,
+        color: ink,
+      ),
+    );
+
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.light,
+      colorScheme: scheme,
+      scaffoldBackgroundColor: paperBg,
+      textTheme: textTheme,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: ink,
+      ),
+      cardTheme: CardThemeData(
+        color: card,
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: ink, width: 1.2),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: ink,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: paperBg,
+        selectedItemColor: ink,
+        unselectedItemColor: ink.withOpacity(0.5),
+        type: BottomNavigationBarType.fixed,
+      ),
+    );
+  }
 
   static const birthdayPrimary = Color(0xFFFF8A3D);
   static const birthdaySecondary = Color(0xFFFFC857);
