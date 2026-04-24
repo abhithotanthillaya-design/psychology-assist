@@ -11,6 +11,7 @@ import '../../core/widgets/gradient_background.dart';
 import '../../core/widgets/smooth_widgets.dart';
 import '../../core/widgets/animations.dart';
 import '../../core/widgets/wavy_surface.dart';
+import 'stats_screen.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -319,59 +320,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                 ),
                 const SizedBox(height: 16),
 
-                // Journal Notes Card
-                if (session.journalSummary.isNotEmpty)
-                  SmoothCard(
-                    backgroundColor:
-                        theme.colorScheme.surface.withOpacity(0.72),
-                    borderColor: AppColors.neonViolet.withOpacity(0.24),
-                    borderRadius: 22,
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.book_outlined,
-                              color: theme.colorScheme.primary,
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              'Journal Notes',
-                              style: AppTypography.headingSmall.copyWith(
-                                  color: theme.textTheme.titleMedium?.color),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          session.journalSummary,
-                          style: AppTypography.bodyMedium.copyWith(
-                            color: theme.textTheme.bodyMedium?.color,
-                          ),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 12),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: () => _showAiChat(context),
-                            child: Text(
-                              'Update Notes',
-                              style: TextStyle(
-                                color: theme.colorScheme.primary,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                if (session.journalSummary.isNotEmpty)
-                  const SizedBox(height: 16),
-
                 // Main CTA Button
                 SizedBox(
                   width: double.infinity,
@@ -385,32 +333,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                 ),
-                const SizedBox(height: 16),
-                // Quick Actions
-                Row(
-                  children: [
-                    Expanded(
-                      child: SmoothButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/breathing');
-                        },
-                        label: 'Breathe',
-                        backgroundColor: AppColors.neonCyan,
-                        textColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: SmoothButton(
-                        onPressed: () => _showAiChat(context),
-                        label: 'AI Chat',
-                        backgroundColor: AppColors.neonViolet,
-                        textColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: 14),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const StatsScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text('View full stats'),
+                  ),
                 ),
                 const SizedBox(height: 32),
               ],
@@ -449,15 +384,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
       return 'None yet';
     }
     return entries.last.label;
-  }
-
-  void _showAiChat(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      showDragHandle: true,
-      isScrollControlled: true,
-      builder: (context) => const _CalmoraAiSheet(),
-    );
   }
 
   IconData _avatarIconFor(int codePoint) {
