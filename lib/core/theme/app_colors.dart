@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
 
-/// Medical-inspired color palettes for a calm, clinical aesthetic
+/// Purple-white wellness palette with soft neon accents.
 class AppColors {
+  static const Color deepViolet = Color(0xFF4C1D95);
+  static const Color neonViolet = Color(0xFF8B5CF6);
+  static const Color neonPink = Color(0xFFEC5CFF);
+  static const Color neonCyan = Color(0xFF22D3EE);
+  static const Color gradientStart = Color(0xFFFFFFFF);
+  static const Color gradientMid = Color(0xFFF4E8FF);
+  static const Color gradientEnd = Color(0xFFE9D5FF);
+
   // Light Theme Colors
-  static const Color lightBg = Color(0xFFFAFBFC);
-  static const Color lightSurface = Colors.white;
-  static const Color lightPrimary = Color(0xFF5B8DEE); // Calm blue
-  static const Color lightSecondary = Color(0xFF6AC5A8); // Soft green
-  static const Color lightAccent = Color(0xFFF0A8A0); // Soft coral
-  static const Color lightText = Color(0xFF1F2937); // Dark gray
-  static const Color lightSubtext = Color(0xFF6B7280); // Medium gray
-  static const Color lightBorder = Color(0xFFE5E7EB); // Light gray
-  static const Color lightDivider = Color(0xFFF3F4F6); // Very light gray
+  static const Color lightBg = Color(0xFFFBF7FF);
+  static const Color lightSurface = Color(0xFFFFFFFF);
+  static const Color lightPrimary = neonViolet;
+  static const Color lightSecondary = neonCyan;
+  static const Color lightAccent = neonPink;
+  static const Color lightText = Color(0xFF241334);
+  static const Color lightSubtext = Color(0xFF746086);
+  static const Color lightBorder = Color(0xFFEADCF8);
+  static const Color lightDivider = Color(0xFFF4ECFB);
 
   // Dark Theme Colors
   static const Color darkBg = Color(0xFF0F1419);
@@ -27,9 +35,9 @@ class AppColors {
   // Medical Theme (Soft & Clinical)
   static const Color medicalBg = Color(0xFFF8FAFB);
   static const Color medicalSurface = Color(0xFFFFFFFF);
-  static const Color medicalPrimary = Color(0xFF4A90E2); // Medical blue
-  static const Color medicalSecondary = Color(0xFF50C878); // Healthcare green
-  static const Color medicalAccent = Color(0xFFFFB347); // Soft amber
+  static const Color medicalPrimary = neonViolet;
+  static const Color medicalSecondary = neonCyan;
+  static const Color medicalAccent = neonPink;
   static const Color medicalText = Color(0xFF2C3E50);
   static const Color medicalSubtext = Color(0xFF7F8C8D);
   static const Color medicalBorder = Color(0xFFECF0F1);
@@ -42,8 +50,8 @@ class AppColors {
   static const Color info = Color(0xFF3B82F6);
 
   // Mood colors (for mood logging)
-  static const Color moodExcellent = Color(0xFF34D399); // Green
-  static const Color moodGood = Color(0xFF60A5FA); // Blue
+  static const Color moodExcellent = Color(0xFF22D3EE); // Cyan
+  static const Color moodGood = Color(0xFF8B5CF6); // Violet
   static const Color moodNeutral = Color(0xFFFCD34D); // Yellow
   static const Color moodPoor = Color(0xFFF87171); // Red
   static const Color moodTerrible = Color(0xFF9333EA); // Purple

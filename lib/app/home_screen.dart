@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/theme/app_colors.dart';
 import '../../features/dashboard/dashboard_screen.dart';
 import '../../features/mood_log/mood_log_screen.dart';
+import '../../features/appointments/appointments_screen.dart';
 import '../../features/settings/settings_screen.dart';
 
 final selectedTabProvider = StateProvider<int>((ref) => 0);
@@ -17,6 +19,7 @@ class HomeScreen extends ConsumerWidget {
     final pages = [
       const DashboardScreen(),
       const MoodLogScreen(),
+      const AppointmentsScreen(),
       const SettingsScreen(),
     ];
 
@@ -24,6 +27,14 @@ class HomeScreen extends ConsumerWidget {
       body: IndexedStack(index: selectedTab, children: pages),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
+          color: theme.colorScheme.surface.withOpacity(0.92),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.neonViolet.withOpacity(0.10),
+              blurRadius: 24,
+              offset: const Offset(0, -8),
+            ),
+          ],
           border: Border(
             top: BorderSide(color: theme.dividerColor, width: 0.5),
           ),
@@ -34,7 +45,7 @@ class HomeScreen extends ConsumerWidget {
             ref.read(selectedTabProvider.notifier).state = index;
           },
           type: BottomNavigationBarType.fixed,
-          backgroundColor: theme.colorScheme.surface,
+          backgroundColor: Colors.transparent,
           selectedItemColor: theme.colorScheme.primary,
           unselectedItemColor: theme.textTheme.bodySmall?.color?.withOpacity(
             0.6,
@@ -52,6 +63,11 @@ class HomeScreen extends ConsumerWidget {
               icon: Icon(Icons.add_circle_outline),
               activeIcon: Icon(Icons.add_circle),
               label: 'Log Mood',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.event_available_outlined),
+              activeIcon: Icon(Icons.event_available),
+              label: 'Appointments',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings_outlined),

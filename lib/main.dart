@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'app/theme_provider.dart';
+import 'app/app_state.dart';
+import 'core/services/app_session_store.dart';
 import 'core/theme/app_theme.dart';
 import 'app/navigation/app_router.dart';
-import 'app/home_screen.dart';
+import 'features/app_lock/app_lock_gate.dart';
+import 'features/onboarding/onboarding_screen.dart';
 
-void main() {
-  runApp(const ProviderScope(child: MyApp()));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final store = AppSessionStore();
+  final initialSession = await store.load();
+
+  runApp(
+    ProviderScope(
+      overrides: [
+        appSessionStoreProvider.overrideWithValue(store),
+        initialAppSessionProvider.overrideWithValue(initialSession),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends ConsumerWidget {
@@ -15,6 +30,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
+    final session = ref.watch(appSessionProvider);
 
     // Map AppThemeMode to ThemeData
     ThemeData getTheme(AppThemeMode mode) {
@@ -34,7 +50,14 @@ class MyApp extends ConsumerWidget {
       darkTheme: AppThemes.darkTheme,
       themeMode:
           themeMode == AppThemeMode.dark ? ThemeMode.dark : ThemeMode.light,
-      home: const HomeScreen(),
+      home: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 550),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
+        child: session.onboardingComplete && session.appLockSet
+            ? const AppLockGate(key: ValueKey('lockGate'))
+            : const OnboardingScreen(key: ValueKey('onboarding')),
+      ),
       onGenerateRoute: AppRouter.generateRoute,
       debugShowCheckedModeBanner: false,
     );

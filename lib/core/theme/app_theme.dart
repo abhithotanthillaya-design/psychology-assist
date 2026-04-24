@@ -20,7 +20,7 @@ class AppThemes {
     ),
     scaffoldBackgroundColor: AppColors.lightBg,
     appBarTheme: AppBarTheme(
-      backgroundColor: AppColors.lightSurface,
+      backgroundColor: AppColors.lightBg,
       elevation: 0,
       centerTitle: true,
       titleTextStyle: AppTypography.headingMedium.copyWith(

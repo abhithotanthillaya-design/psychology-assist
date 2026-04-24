@@ -1,0 +1,394 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../app/app_state.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
+import '../../core/widgets/gradient_background.dart';
+import '../../core/widgets/smooth_widgets.dart';
+
+class AppointmentsScreen extends ConsumerStatefulWidget {
+  const AppointmentsScreen({super.key});
+
+  @override
+  ConsumerState<AppointmentsScreen> createState() => _AppointmentsScreenState();
+}
+
+class _AppointmentsScreenState extends ConsumerState<AppointmentsScreen> {
+  final _emailController = TextEditingController();
+  final _noteController = TextEditingController();
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
+  String _type = 'Video session';
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _noteController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final profile = ref.read(appSessionProvider).profile;
+    final linkedEmail = profile?.psychologistEmail ?? demoPsychologistEmail;
+    if (_emailController.text.isEmpty) {
+      _emailController.text = linkedEmail;
+    }
+  }
+
+  Future<void> _pickDate() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: now.add(const Duration(days: 1)),
+      firstDate: now,
+      lastDate: now.add(const Duration(days: 180)),
+    );
+    if (picked != null) {
+      setState(() => _selectedDate = picked);
+    }
+  }
+
+  Future<void> _pickTime() async {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: const TimeOfDay(hour: 10, minute: 0),
+    );
+    if (picked != null) {
+      setState(() => _selectedTime = picked);
+    }
+  }
+
+  void _bookAppointment() {
+    final email = _emailController.text.trim();
+    if (!email.contains('@')) {
+      _showMessage('Enter your psychologist email.');
+      return;
+    }
+    if (_selectedDate == null || _selectedTime == null) {
+      _showMessage('Choose date and time.');
+      return;
+    }
+
+    final startsAt = DateTime(
+      _selectedDate!.year,
+      _selectedDate!.month,
+      _selectedDate!.day,
+      _selectedTime!.hour,
+      _selectedTime!.minute,
+    );
+
+    ref.read(appSessionProvider.notifier).addAppointment(
+          Appointment(
+            psychologistEmail: email,
+            startsAt: startsAt,
+            type: _type,
+            note: _noteController.text.trim(),
+          ),
+        );
+
+    _noteController.clear();
+    setState(() {
+      _selectedDate = null;
+      _selectedTime = null;
+    });
+    _showMessage('Appointment requested.');
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final session = ref.watch(appSessionProvider);
+    final profile = session.profile;
+    final appointments = session.appointments
+        .where((appointment) => appointment.startsAt.isAfter(DateTime.now()))
+        .toList();
+
+    return Scaffold(
+      body: GradientBackground(
+        child: SafeArea(
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(18, 18, 18, 10),
+                  child: _AppointmentsHero(profile: profile),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(18, 8, 18, 10),
+                  child: SmoothCard(
+                    borderRadius: 22,
+                    elevation: 16,
+                    backgroundColor: Colors.white.withOpacity(0.9),
+                    borderColor: AppColors.neonViolet.withOpacity(0.2),
+                    padding: const EdgeInsets.all(18),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Book an appointment',
+                          style: AppTypography.headingSmall,
+                        ),
+                        const SizedBox(height: 16),
+                        SmoothTextField(
+                          label: 'Psychologist email',
+                          hint: 'doctor@example.com',
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                        const SizedBox(height: 14),
+                        Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          children: [
+                            _PickerChip(
+                              icon: Icons.calendar_month,
+                              label: _selectedDate == null
+                                  ? 'Date'
+                                  : '${_selectedDate!.day}/${_selectedDate!.month}',
+                              onTap: _pickDate,
+                            ),
+                            _PickerChip(
+                              icon: Icons.schedule,
+                              label: _selectedTime == null
+                                  ? 'Time'
+                                  : _selectedTime!.format(context),
+                              onTap: _pickTime,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 14),
+                        DropdownButtonFormField<String>(
+                          value: _type,
+                          decoration: const InputDecoration(
+                            labelText: 'Session type',
+                          ),
+                          items: const [
+                            DropdownMenuItem(
+                              value: 'Video session',
+                              child: Text('Video session'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'In-person visit',
+                              child: Text('In-person visit'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'Follow-up',
+                              child: Text('Follow-up'),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() => _type = value);
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 14),
+                        SmoothTextField(
+                          label: 'Note',
+                          hint: 'Anything you want to discuss?',
+                          controller: _noteController,
+                          maxLines: 3,
+                        ),
+                        const SizedBox(height: 18),
+                        SizedBox(
+                          width: double.infinity,
+                          child: SmoothButton(
+                            label: 'Request Appointment',
+                            icon: const Icon(
+                              Icons.bolt,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            backgroundColor: AppColors.neonViolet,
+                            onPressed: _bookAppointment,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(18, 12, 18, 8),
+                  child: Text(
+                    'Future appointments',
+                    style: AppTypography.headingSmall,
+                  ),
+                ),
+              ),
+              SliverList.builder(
+                itemCount: appointments.isEmpty ? 1 : appointments.length,
+                itemBuilder: (context, index) {
+                  if (appointments.isEmpty) {
+                    return const Padding(
+                      padding: EdgeInsets.fromLTRB(18, 0, 18, 24),
+                      child: _EmptyAppointments(),
+                    );
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(18, 0, 18, 12),
+                    child: _AppointmentCard(appointment: appointments[index]),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AppointmentsHero extends StatelessWidget {
+  final AppProfile? profile;
+
+  const _AppointmentsHero({this.profile});
+
+  @override
+  Widget build(BuildContext context) {
+    final linkedEmail = profile?.psychologistEmail ?? demoPsychologistEmail;
+    return Container(
+      padding: const EdgeInsets.all(22),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(28),
+        gradient: const LinearGradient(
+          colors: [AppColors.deepViolet, AppColors.neonViolet],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.neonViolet.withOpacity(0.35),
+            blurRadius: 30,
+            offset: const Offset(0, 14),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.event_available, color: Colors.white, size: 32),
+          const SizedBox(height: 18),
+          Text(
+            'Care, scheduled beautifully',
+            style: AppTypography.headingLarge.copyWith(color: Colors.white),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Linked demo psychologist: $linkedEmail',
+            style: AppTypography.bodySmall.copyWith(
+              color: Colors.white.withOpacity(0.86),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PickerChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _PickerChip({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionChip(
+      avatar: Icon(icon, color: AppColors.neonViolet, size: 18),
+      label: Text(label),
+      backgroundColor: AppColors.neonViolet.withOpacity(0.08),
+      side: BorderSide(color: AppColors.neonViolet.withOpacity(0.24)),
+      onPressed: onTap,
+    );
+  }
+}
+
+class _AppointmentCard extends StatelessWidget {
+  final Appointment appointment;
+
+  const _AppointmentCard({required this.appointment});
+
+  @override
+  Widget build(BuildContext context) {
+    final date = appointment.startsAt;
+    final minutes = date.minute.toString().padLeft(2, '0');
+    return SmoothCard(
+      borderRadius: 20,
+      backgroundColor: Colors.white.withOpacity(0.92),
+      borderColor: AppColors.neonCyan.withOpacity(0.3),
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.neonCyan.withOpacity(0.16),
+            ),
+            child: const Icon(Icons.video_call, color: AppColors.deepViolet),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(appointment.type, style: AppTypography.labelLarge),
+                const SizedBox(height: 4),
+                Text(
+                  '${date.day}/${date.month}/${date.year} at ${date.hour}:$minutes',
+                  style: AppTypography.bodySmall,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  appointment.psychologistEmail,
+                  style: AppTypography.caption.copyWith(
+                    color: AppColors.neonViolet,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmptyAppointments extends StatelessWidget {
+  const _EmptyAppointments();
+
+  @override
+  Widget build(BuildContext context) {
+    return SmoothCard(
+      borderRadius: 20,
+      backgroundColor: Colors.white.withOpacity(0.75),
+      padding: const EdgeInsets.all(20),
+      child: const Row(
+        children: [
+          Icon(Icons.calendar_today_outlined, color: AppColors.neonViolet),
+          SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'No future appointments yet. Your next sessions will appear here.',
+              style: AppTypography.bodySmall,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
