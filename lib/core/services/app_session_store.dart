@@ -65,6 +65,7 @@ class AppSessionStore {
       'appointments': session.appointments.map(_appointmentToJson).toList(),
       'prescriptions': session.prescriptions.map(_prescriptionToJson).toList(),
       'moodEntries': session.moodEntries.map(_moodEntryToJson).toList(),
+      'prescriptions': session.prescriptions.map(_prescriptionToJson).toList(),
       'lastUnlockedAt': session.lastUnlockedAt?.toIso8601String(),
       'lockTimeoutMinutes': session.lockTimeoutMinutes,
       'journalSummary': session.journalSummary,
@@ -82,6 +83,9 @@ class AppSessionStore {
     final moodEntries = (json['moodEntries'] as List<dynamic>? ?? [])
         .map((item) => _moodEntryFromJson(item as Map<String, dynamic>))
         .toList();
+    final prescriptions = (json['prescriptions'] as List<dynamic>? ?? [])
+        .map((item) => _prescriptionFromJson(item as Map<String, dynamic>))
+        .toList();
 
     return AppSession(
       onboardingComplete: json['onboardingComplete'] as bool? ?? false,
@@ -93,6 +97,7 @@ class AppSessionStore {
       appointments: appointments,
       prescriptions: prescriptions,
       moodEntries: moodEntries,
+      prescriptions: prescriptions,
       lastUnlockedAt: json['lastUnlockedAt'] == null
           ? null
           : DateTime.tryParse(json['lastUnlockedAt'] as String),
@@ -208,6 +213,31 @@ class AppSessionStore {
       value: json['value'] as int? ?? 3,
       label: json['label'] as String? ?? 'Neutral',
       note: json['note'] as String? ?? '',
+    );
+  }
+
+  Map<String, dynamic> _prescriptionToJson(Prescription prescription) {
+    return {
+      'id': prescription.id,
+      'medicationName': prescription.medicationName,
+      'doctorEmail': prescription.doctorEmail,
+      'patientEmail': prescription.patientEmail,
+      'instructions': prescription.instructions,
+      'hour': prescription.hour,
+      'minute': prescription.minute,
+    };
+  }
+
+  Prescription _prescriptionFromJson(Map<String, dynamic> json) {
+    return Prescription(
+      id: json['id'] as String? ??
+          DateTime.now().millisecondsSinceEpoch.toString(),
+      medicationName: json['medicationName'] as String? ?? 'Medication',
+      doctorEmail: json['doctorEmail'] as String? ?? demoPsychologistEmail,
+      patientEmail: json['patientEmail'] as String? ?? '',
+      instructions: json['instructions'] as String? ?? '',
+      hour: json['hour'] as int? ?? 20,
+      minute: json['minute'] as int? ?? 0,
     );
   }
 

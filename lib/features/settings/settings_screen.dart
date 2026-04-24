@@ -247,6 +247,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                             ref
                                 .read(userPreferencesProvider.notifier)
                                 .updateMedicationRemindersEnabled(value);
+                            if (value) {
+                              _scheduleMedicationReminders();
+                            } else {
+                              NotificationService().cancelMedicationReminders();
+                            }
                           },
                           enabled: preferences.notificationsEnabled,
                         ),
@@ -522,6 +527,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
 
   Future<void> _scheduleMoodCheckIns(int hours) async {
     await NotificationService().scheduleMoodCheckInsEvery(hours);
+  }
+
+  Future<void> _scheduleMedicationReminders() async {
+    final prescriptions = ref.read(appSessionProvider).prescriptions;
+    if (prescriptions.isNotEmpty) {
+      await NotificationService().scheduleMedicationReminders(prescriptions);
+    }
   }
 
   void _editProfile(AppProfile profile) {
