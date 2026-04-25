@@ -165,19 +165,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                               ),
                             ),
                             const SizedBox(width: 12),
-                            Expanded(
-                              child: _ThemeButton(
-                                title: 'Medical',
-                                icon: Icons.health_and_safety,
-                                isSelected:
-                                    currentTheme == AppThemeMode.medical,
-                                onTap: () {
-                                  ref
-                                      .read(themeModeProvider.notifier)
-                                      .setThemeMode(AppThemeMode.medical);
-                                },
-                              ),
-                            ),
+                            Expanded(child: SizedBox()),
                           ],
                         ),
                         const SizedBox(height: 12),
