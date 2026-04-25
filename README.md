@@ -1,5 +1,5 @@
 # Calmora
-Built with clean architechure, vibecoded and improved in 24h as part of Xypheria Hackathon at Alvas
+Built with clean architechure, vibecoded and improved in 24h as part of Xypheria Hackathon at Alvas. A special theme similar to the Xypheria Hackathon is also made under the name "Journal" </br>
 
 ## Architecture
 - **State Management**: Riverpod
@@ -11,16 +11,9 @@ Built with clean architechure, vibecoded and improved in 24h as part of Xypheria
 
 ## 🔧 Tech Stack
 
-- **Framework**: Flutter 3.13+
-- **State Management**: Riverpod 3.3+
-- **Database**: SQLite 2.4+ (prepared)
-- **Notifications**: flutter_local_notifications 21.0+
+- **Framework**: Flutter 
+- **State Management**: Riverpod 
+- **Database**: SQLite 
+- **AI Model**: Ollama (Llama 3.2)
+- **Notifications**: flutter_local_notifications 
 
-## 📦 Dependencies
-
-```yaml
-flutter_riverpod: ^3.3.1      # State management
-sqflite: ^2.4.2               # Local database
-flutter_local_notifications: ^21.0.0  # Notifications
-timezone: ^0.11.0             # Timezone support
-```
